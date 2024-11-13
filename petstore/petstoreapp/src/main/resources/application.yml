@@ -1,6 +1,9 @@
-#logging:
-#  level:
-#    org.springframework: DEBUG
+logging:
+  level:
+    org.springframework: DEBUG
+audio:
+  blob:
+    enabled: false
 bing:
   search:
     subscription:

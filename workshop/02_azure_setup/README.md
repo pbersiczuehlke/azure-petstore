@@ -66,7 +66,7 @@ To create a VNet:
 9. Click 'Tags' and add a tag with Name 'team' and Value '\<your team name\>'
 10. Create it
 
-## Creating the Container Registry
+## Creating the Azure Container Registry
 We will use the Azure Portal to create the Azure Container Registry (ACR).
 1. Navigate to the Portal, type 'Container Registries' into the search bar.
 2. Click '+ Create'
@@ -92,8 +92,33 @@ TODO: Agentpool in the same vnet to enable pushing images from the local machine
 
 TODO: allow public ip access to the local machine? - depends on how the network is set up
 
+## Pushing local images to the ACR
+We can push the images that we have built locally in the previous challenge to the ACR.
+To push an image to a registry with docker we need to name it such that it contains the name of the registry.
+For example: to upload the image `hello-world:latest` that we have locally to a registry at `team1petstore.azurecr.io`, 
+we would tag the image with `team1petstore.azurecr.io/hello-world:latest`.
+We can then push this image.
+Before we can push an image to an ACR, we first need to log in.
+This will store credentials on our machine so that the docker command can pull and push the images from this registry.
+
+Example:
+```bash
+# list the container registries
+az acr list
+
+# log in to the appropriate ACR
+az acr login -n team1petstore
+
+# creates a new image with the name team1petstore.azurecr.io/hello-world:latest
+# it doesn't copy anything, just creates a new alias
+docker tag hello-world:latest team1petstore.azurecr.io/hello-world:latest
+
+# we can then push this image to the registry
+docker push team1petstore.azurecr.io/hello-world:latest
+```
+
 ## Building Petstore images
-In addition to pushing the images directly to the Azure Container Registry (ACR), we can also use the `az acr build` command.
+In addition to pushing the images directly, we can also use the `az acr build` command.
 This works by uploading the entire context to a build agent on Azure, building the image and pushing the built image into
 the ACR.
 To build the images with `az`:

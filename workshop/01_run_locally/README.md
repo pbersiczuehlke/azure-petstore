@@ -39,8 +39,14 @@ docker run --rm --net petstorebridge --name petstorepetservice -p 8081:8081 -e P
 docker run --rm --net petstorebridge --name petstoreproductservice -p 8082:8082 -e PETSTOREPRODUCTSERVICE_SERVER_PORT=8082 -d --ulimit nofile=65536:65536 petstoreproductservice:0.1.0
 # productservice is not available at localhost:8082
 
+# get the IP of the required product service
+PETSTORE_PRODUCT_SERVICE_IP=$(docker inspect -f '{{range .NetworkSettings.Networks}}{{.IPAddress}}{{end}}' petstoreproductservice)
+
 # start orderservice
-docker run --rm --net petstorebridge --name petstoreorderservice -p 8083:8083 -e PETSTOREORDERSERVICE_SERVER_PORT=8083 -d --ulimit nofile=65536:65536 petstoreorderservice:0.1.0
+docker run --rm --net petstorebridge --name petstoreorderservice -p 8083:8083 \
+  -e PETSTOREORDERSERVICE_SERVER_PORT=8083 \
+  -e PETSTOREPRODUCTSERVICE_URL=http://$PETSTORE_PRODUCT_SERVICE_IP:8082 \
+  -d --ulimit nofile=65536:65536 petstoreorderservice:0.1.0
 # orderservice is not available at localhost:8083
 ```
 

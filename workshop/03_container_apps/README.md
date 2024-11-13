@@ -28,5 +28,6 @@ To create the frontend service:
 22. Click 'Create'
 
 We have now created the Frontend service.
+TODO: Can this be accessed from the corporate network?
 
 

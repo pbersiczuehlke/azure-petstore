@@ -9,7 +9,7 @@ The code for the four services that our Petshop consists of is located at:
 
 Each of those directories contains a Dockerfile that builds that microservice.
 
-## Task 1:
+## Task 1.1:
 Build the Docker images.
 You should have 4 images by the end:
 
@@ -26,7 +26,7 @@ Links:
 * [Building Docker Images](https://docs.docker.com/get-started/docker-concepts/building-images/build-tag-and-publish-an-image/)
 * [A Beginner's Guide](https://stackify.com/docker-build-a-beginners-guide-to-building-docker-images/)
 
-## Task 2:
+## Task 1.2:
 Run the Petstore locally.
 It should be noted that the frontend `petstoreapp` service needs to be set up to connect to the backend services.
 It is recommended to create a new bridge network in Docker with which all the services will be connected.

@@ -49,12 +49,20 @@ And for the `orderservice`, we need to specify:
 PETSTOREPRODUCTSERVICE_URL
 ```
 
+If the orderservice has an ip address of `10.0.0.1` in the bridge network, then the URL for the order 
+service in the petstoreapp should be set:
+```bash
+PETSTOREORDERSERVICE_URL=http://10.0.0.1:8080
+```
+where the port `8080` depends on the `PETSTOREORDERSERVICE_SERVER_PORT` setting.
+
 Note:
 Pleae add: `--ulimit nofile=65536:65536` to the `docker run` command, to avoid issues with Java.
 
 Links:
 * [Passing Environment Variables to Docker Containers](https://www.baeldung.com/ops/docker-container-environment-variables)
 * [Create Bridge Network](https://docs.docker.com/reference/cli/docker/network/create/#description)
+* [Container Networking](https://docs.docker.com/engine/containers/run/#container-networking)
 
 ## Acceptance criteria:
 1. Images are built

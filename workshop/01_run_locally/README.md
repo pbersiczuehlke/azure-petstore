@@ -50,7 +50,7 @@ PETSTOREPRODUCTSERVICE_URL
 ```
 
 Note:
-Pleae add: --ulimit nofile=65536:65536 to the `docker run` command, to avoid issues with Java.
+Pleae add: `--ulimit nofile=65536:65536` to the `docker run` command, to avoid issues with Java.
 
 Links:
 * [Passing Environment Variables to Docker Containers](https://www.baeldung.com/ops/docker-container-environment-variables)

@@ -1,4 +1,4 @@
-# Set up Azure CLI
+# Set up Azure & Create ACR
 We can interact with Azure in multiple ways.
 The most user-friendly way is to use the [Azure Portal](https://portal.azure.com).
 However, not all functionality is available through the Portal.

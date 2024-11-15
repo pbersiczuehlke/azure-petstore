@@ -1,11 +1,14 @@
-# Running the Pet store locally
+# Running the Petstore locally (Optional)
 
 ## Prerequisites
-To be able to run the Pet store locally, we need to have some tools installed.
-The following have to be installed: `docker`.
+The application is packaged as a set of Docker containers.
+To build and run the application we need to have `docker` installed on the workstation.
+There is no Docker on the provided VMs.
+Therefore, to follow this guide you need to have `docker` installed on your machine.
+If Docker is not already installed, you may skip this task.
 
 ## Building the images
-The Pet store runs in a microservices architecture with 4 microservices: 3 are background services, and 1 is the frontend.
+The Petstore runs in a microservices architecture with 4 microservices: 1 frontend, and 3 background services.
 
 Building the container images is done with:
 ```bash
@@ -75,7 +78,11 @@ docker run --rm --net $NETWORK_NAME --name petstoreapp -p 8080:8080 \
 ## Explore the Petshop
 Navigate your browser to `http://localhost:8080` and explore the Pet shop.
 
-## Todo - turning features on/off with env vars
+## Configuring a service
+All services used in this workshop are built with Spring Boot.
+As such they are configured using the `application.yml` file in the `src/resources` subdirectory of each service.
+Some of the configurations pull their configuration from the environment variables.
+Therefore, we can change the configuration of the service just by changing the environment variables.
 
 ## Acceptance criteria:
 1. Images are built

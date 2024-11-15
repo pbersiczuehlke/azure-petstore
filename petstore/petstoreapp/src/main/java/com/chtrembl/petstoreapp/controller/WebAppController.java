@@ -185,9 +185,7 @@ public class WebAppController {
 
 	@PostMapping(value = "/completecart")
 	public String updatecart(Model model, OAuth2AuthenticationToken token, HttpServletRequest request) {
-		if (token != null) {
-			this.petStoreService.updateOrder(0, 0, true);
-		}
+		this.petStoreService.updateOrder(0, 0, true);
 		return "redirect:cart";
 	}
 

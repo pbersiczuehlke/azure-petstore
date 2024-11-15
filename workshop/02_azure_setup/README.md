@@ -1,23 +1,27 @@
 # Set up Azure CLI
-To use the Azure CLI commands, we need to authenticate with Azure and choose a subscription.
-Azure CLI is an executable with the name `az`.
-It needs to be installed if it is missing.
+We can interact with Azure in multiple ways.
+The most user-friendly way is to use the [Azure Portal](https://portal.azure.com).
+However, not all functionality is available through the Portal.
+To fully utilize Azure, we need to use a command line interface (CLI) tool.
+The name of the CLI tool for Azure is `az`.
+In the case that `az` is missing from the workstation, it needs to be installed.
+The first step to using `az` is to log in and choose a subscription.
 
 ## Output formatting
 By default, Azure CLI outputs in the json format. 
 This is usually too much information. 
 For ease of use we will first configure it to output with the *table* format.
-The *table* output does hide a lot of information.
+However, the *table* output does hide a lot of information.
 In the event that we need to see the entire output, we can add `--output json` to the end of any `az` command.
 ```bash
 # set the output format to table
-az config set core.output=table
+az config set defaults.output=table
 
 # this will output in the table format
-az config get core
+az config get defaults
 
 # this will output in the json format
-az config get core --output json
+az config get defaults --output json
 ```
 In this case, the amount of information does not differ between the two formats: *json* and *table*, 
 but in most cases there is significant difference.
@@ -45,41 +49,36 @@ az account show
 az account set -s <subscription_id>
 ```
 
-## Creating a VNet
+## Using the provided VNet
 Due to the security setup, we are not allowed to expose any services to the internet.
 This is enforced via Policies.
 Therefore, we would fail to create any resources that are directly exposed to the internet.
-To still then be able to create resources, we will create a VNet into which we will deploy our services.
-Later we will then set up the connection between this VNet and the corporate network to directly connect to the
-deployed services and the container registry from the corporate network.
-TODO: How exactly will this connection work?
+To still then be able to create resources, we will deploy into an already existing VNet.
+This VNet is connected to the corporate network and the services on it are available through the provided VMs.
 
-To create a VNet:
+To use the provided VNet we need to create subnets on it for our team:
 1. Navigate to the Portal, type 'Virtual networks' into the search bar
-2. Click '+ Create'
-3. Choose a Resource Group that your team has been assigned
-4. Give it a name: 'vnet-petstore'
-5. Go to 'IP addresses'
-6. Change default subnet to 'sn-ca' and set the size to '/23'
-7. Click '+ Add a subnet'
-8. Set name 'sn-acr' & click 'Add'
-9. Click 'Tags' and add a tag with Name 'team' and Value '\<your team name\>'
-10. Create it
+2. Select the provided VNet
+3. On the left-hand side select Settings -> Subnets -> + Subnet
+4. Change the name to `sn-<teamname>` & accept all other default (make sure the Size is set to /24)
+5. Click Add
 
 ## Creating the Azure Container Registry
-We will use the Azure Portal to create the Azure Container Registry (ACR).
+Docker images need to be stored somewhere before they are used.
+For this purpose Azure provides the Azure Container Registry (ACR).
+We will use the Azure Portal to create the ACR.
 1. Navigate to the Portal, type 'Container Registries' into the search bar.
 2. Click '+ Create'
 3. Choose a Resource Group that your team has been assigned
-4. Give it a name: 'acrteam\<X\>petshop' where \<X\> is your team name
+4. Give it a name: `<teamname>petstore`
 5. Location: 'Switzerland North'
 6. Pricing plan: 'Premium'
 7. Click: 'Next: Networking >'
 8. Select: 'Private access'
 9. Click: 'Create a private endpoint connection'
-10. Name: 'pe-acr-petshop' explanation: pe = private endpoint, acr = azure container registry
-11. Virtual Network: 'vnet-petstore'
-12. Subnet: 'sn-acr'
+10. Name: 'pe-acr' explanation: pe = private endpoint, acr = azure container registry
+11. Virtual Network: provided one
+12. Subnet: 'sn-<teamname>'
 13. Click: 'OK'
 14. Next, Next
 15. Add a tag. Name team, value <your team name>
@@ -90,9 +89,9 @@ We have now created a Registry which can be accessed by the Container Apps.
 
 TODO: Agentpool in the same vnet to enable pushing images from the local machine to the registry?
 
-TODO: allow public ip access to the local machine? - depends on how the network is set up
+TODO: Allow public ip access to the local machine? - depends on how the network is set up
 
-## Pushing local images to the ACR
+## Pushing local images to the ACR (Optional)
 We can push the images that we have built locally in the previous challenge to the ACR.
 To push an image to a registry with docker we need to name it such that it contains the name of the registry.
 For example: to upload the image `hello-world:latest` that we have locally to a registry at `team1petstore.azurecr.io`, 
@@ -107,14 +106,14 @@ Example:
 az acr list
 
 # log in to the appropriate ACR
-az acr login -n team1petstore
+az acr login -n <teamname>petstore
 
-# creates a new image with the name team1petstore.azurecr.io/hello-world:latest
+# creates a new image with the name <teamname>petstore.azurecr.io/hello-world:latest
 # it doesn't copy anything, just creates a new alias
-docker tag hello-world:latest team1petstore.azurecr.io/hello-world:latest
+docker tag hello-world:latest <teamname>.azurecr.io/hello-world:latest
 
 # we can then push this image to the registry
-docker push team1petstore.azurecr.io/hello-world:latest
+docker push <teamname>petstore.azurecr.io/hello-world:latest
 ```
 
 ## Building Petstore images
@@ -125,22 +124,22 @@ To build the images with `az`:
 ```bash
 # pet backend service
 cd petstore/petstorepetservice
-az acr build -t petstorepetservice:0.1.0-az -r acrteam<X>petshop .
+az acr build -t petstorepetservice:0.1.0-az -r <teamname>petstore .
 
 
 # order backend service
 cd petstore/petstoreorderservice
-az acr build -t petstoreorderservice:0.1.0-az -r acrteam<X>petshop .
+az acr build -t petstoreorderservice:0.1.0-az -r <teamname>petstore .
 
 # product backend service
 cd petstore/petstoreproductservice
-az acr build -t petstoreproductservice:0.1.0-az -r acrteam<X>petshop .
+az acr build -t petstoreproductservice:0.1.0-az -r <teamname>petstore .
 
 # frontend app service
 cd petstore/petstoreapp
-az acr build -t petstoreapp:0.1.0-az -r acrteam<X>petshop .
+az acr build -t petstoreapp:0.1.0-az -r <teamname>petstore .
 ```
 
 ## Acceptance criteria
 1. Container registry is created with a private endpoint
-2. Images are uploaded to the registry
+2. Images are built & uploaded to the registry

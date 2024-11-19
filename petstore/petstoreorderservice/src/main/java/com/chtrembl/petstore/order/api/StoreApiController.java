@@ -184,8 +184,7 @@ public class StoreApiController implements StoreApi {
 				
 				log.info(String.format("order:%s", order.toString()));
 				
-				if (order!=null && order.isComplete() && this.jmsTemplate != null && order.getEmail() != null
-						&& order.getEmail().trim().toLowerCase().endsWith("microsoft.com")) {
+				if (order!=null && order.isComplete() && this.jmsTemplate != null) {
 					this.jmsTemplate.convertAndSend("orders", orderJSON);
 				}
 

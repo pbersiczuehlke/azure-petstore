@@ -8,6 +8,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.azure.storage.blob.BlobContainerClient;
@@ -17,6 +18,7 @@ import com.azure.storage.blob.models.BlobHttpHeaders;
 import com.azure.storage.blob.specialized.BlockBlobClient;
 
 @Component
+@ConditionalOnProperty(name = "audio.blob.enabled", havingValue = "true", matchIfMissing = false)
 public class StorageServiceImpl implements StorageService {
    	private static Logger logger = LoggerFactory.getLogger(StorageServiceImpl.class);
 

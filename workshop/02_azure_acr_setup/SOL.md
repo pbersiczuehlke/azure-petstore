@@ -55,7 +55,7 @@ Therefore, we would fail to create any resources that are directly exposed to th
 To still then be able to create resources, we will deploy into an already existing VNet.
 
 The provided VNet is already prepopulated with subnets.
-The follow the following naming scheme:
+They follow the following naming scheme:
 
 | Name                                  | Purpose                    |
 |---------------------------------------|----------------------------|

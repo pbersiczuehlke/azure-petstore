@@ -47,6 +47,10 @@ one for everything else.
     4. Configure it to the appropriate subnet
 - **Note**:
     - Please first create the ACR with the Premium tier and assign the endpoint after ACR has been created. 
+    - It will take some time (approximately 20min) for the ACR to become available due to
+DNS syncing. Before the ACR is available we can't continue.
+You can check if it's available by running `nslookup team<team_number>petstore.azurecr.io` in the VM.
+When the domain resolves, the registry has become available.
 - **Links**:
     - [Quickstart: Create a private container registry using the Azure portal](https://learn.microsoft.com/en-us/azure/container-registry/container-registry-get-started-portal)
     - [Use private endpoints for Azure Container Registry](https://learn.microsoft.com/en-us/azure/container-registry/container-registry-private-link)

@@ -104,6 +104,11 @@ We can then push this image with `docker push`.
 Before we can push an image to an ACR, we first need to log in into it.
 This will store credentials on our machine so that the docker command can pull and push the images from this registry.
 
+**Note**: It will take some time (approximately 20min) for the ACR to become available due to
+DNS syncing. Before the ACR is available we can't continue. 
+You can check if it's available by running `nslookup team<team_number>petstore.azurecr.io`.
+When the domain resolves, the registry has become available.
+
 Example:
 ```bash
 # list the container registries

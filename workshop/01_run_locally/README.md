@@ -1,8 +1,6 @@
-# Building and Running Locally (Optional)
+# Building and Running Locally
 
-This exercise is optional.
-However, it will provide a deeper understanding of containerized applications.
-In order to build and run locally, you need to have Docker installed on your machine.
+This exercise is intended to provide a deeper understanding of containerized applications.
 
 The code for the four services that our Petshop consists of is located at:
 `petstore/petstoreapp`, `petstore/petstorepetservice`, `petstore/petstoreproductservice`, `petstore/petstoreorderservcie`.
@@ -29,7 +27,6 @@ Links:
 ## Task 1.2:
 Run the Petstore locally.
 It should be noted that the frontend `petstoreapp` service needs to be set up to connect to the backend services.
-It is recommended to create a new bridge network in Docker with which all the services will be connected.
 
 Every service allows us to set the port number under which it will be exposed:
 * For the `petservice`: `PETSTOREPETSERVICE_SERVER_PORT`
@@ -38,10 +35,11 @@ Every service allows us to set the port number under which it will be exposed:
 * For the frontend `petstoreapp`: `PETSTOREAPP_SERVER_PORT`
 
 By default, all these ports are 8080.
+These ports may stay defaults, but can be changed depending on your preferences.
 
 To connect between services, we need to specify the URLs to other services.
-For the `petstoreapp`, we need to specify:
 
+For the `petstoreapp`, we need to specify:
 ```
 PETSTOREPETSERVICE_URL
 PETSTOREPRODUCTSERVICE_URL
@@ -49,26 +47,28 @@ PETSTOREORDERSERVICE_URL
 ```
 
 And for the `orderservice`, we need to specify:
-
 ```
 PETSTOREPRODUCTSERVICE_URL
 ```
 
-If the `orderservice` has an IP address of `10.0.0.1` in the bridge network, then the URL for the order service in the `petstoreapp` should be set:
-
+Example:
+If the `orderservice` has an IP address of `10.0.0.1` (which can be found with `docker inspect` command), 
+then the URL for the order service in the `petstoreapp` should be set:
 ```
 PETSTOREORDERSERVICE_URL=http://10.0.0.1:8080
 ```
 
 where the port `8080` depends on the `PETSTOREORDERSERVICE_SERVER_PORT` setting.
 
-Note: Please add `--ulimit nofile=65536:65536` to the `docker run` command to avoid issues with Java.
+Note: You may need to add `--ulimit nofile=65536:65536` to the `docker run` command to avoid issues with Java.
 
 Links:
-* [Passing Environment Variables to Docker Containers](https://www.baeldung.com/ops/docker-container-environment-variables)
-* [Create Bridge Network](https://docs.docker.com/reference/cli/docker/network/create/#description)
-* [Container Networking](https://docs.docker.com/engine/containers/run/#container-networking)
+* [`docker ps`](https://docs.docker.com/engine/reference/commandline/ps/)
+* [`docker inspect`](https://docs.docker.com/engine/reference/commandline/inspect/)
+* [`docker run`](https://docs.docker.com/engine/reference/commandline/run/)
+* [`docker stop`](https://docs.docker.com/engine/reference/commandline/stop/)
+* [Passing Environment Variables to Docker Containers](https://www.baeldung.com/ops/docker-container-environment-variables#env-param)
 
 ## Acceptance Criteria:
-1. Images are built.
-2. Petshop is running on your local machine.
+1. Images are built
+2. Petshop is running on your local machine

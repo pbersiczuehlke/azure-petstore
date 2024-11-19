@@ -1,12 +1,5 @@
 # Running the Petstore locally (Optional)
 
-## Prerequisites
-The application is packaged as a set of Docker containers.
-To build and run the application we need to have `docker` installed on the workstation.
-There is no Docker on the provided VMs.
-Therefore, to follow this guide you need to have `docker` installed on your machine.
-If Docker is not already installed, you may skip this task.
-
 ## Building the images
 The Petstore runs in a microservices architecture with 4 microservices: 1 frontend, and 3 background services.
 
@@ -31,22 +24,19 @@ docker build -t petstoreapp:0.1.0 .
 
 ## Running the pet store locally
 ```bash
-# create a bridge network
-docker network create petstorebridge
-
 # start petservice
-docker run --rm --net petstorebridge --name petstorepetservice -p 8081:8081 -e PETSTOREPETSERVICE_SERVER_PORT=8081 -d --ulimit nofile=65536:65536 petstorepetservice:0.1.0
+docker run --rm --name petstorepetservice -p 8081:8081 -e PETSTOREPETSERVICE_SERVER_PORT=8081 -d --ulimit nofile=65536:65536 petstorepetservice:0.1.0
 # petservice is not available at localhost:8081
 
 # start productservice
-docker run --rm --net petstorebridge --name petstoreproductservice -p 8082:8082 -e PETSTOREPRODUCTSERVICE_SERVER_PORT=8082 -d --ulimit nofile=65536:65536 petstoreproductservice:0.1.0
+docker run --rm --name petstoreproductservice -p 8082:8082 -e PETSTOREPRODUCTSERVICE_SERVER_PORT=8082 -d --ulimit nofile=65536:65536 petstoreproductservice:0.1.0
 # productservice is not available at localhost:8082
 
 # get the IP of the required product service
 PETSTORE_PRODUCT_SERVICE_IP=$(docker inspect -f '{{range .NetworkSettings.Networks}}{{.IPAddress}}{{end}}' petstoreproductservice)
 
 # start orderservice
-docker run --rm --net petstorebridge --name petstoreorderservice -p 8083:8083 \
+docker run --rm --name petstoreorderservice -p 8083:8083 \
   -e PETSTOREORDERSERVICE_SERVER_PORT=8083 \
   -e PETSTOREPRODUCTSERVICE_URL=http://$PETSTORE_PRODUCT_SERVICE_IP:8082 \
   -d --ulimit nofile=65536:65536 petstoreorderservice:0.1.0
@@ -56,16 +46,13 @@ docker run --rm --net petstorebridge --name petstoreorderservice -p 8083:8083 \
 To start the petstore app, we need to link it with the above microservices.
 We will use `docker inspect` to extract the ips addresses of the microservices.
 ```bash
-# start petstoreapp
-NETWORK_NAME="petstorebridge"
-
 # Get the IP addresses of the required services
 PETSTORE_PET_SERVICE_IP=$(docker inspect -f '{{range .NetworkSettings.Networks}}{{.IPAddress}}{{end}}' petstorepetservice)
 PETSTORE_PRODUCT_SERVICE_IP=$(docker inspect -f '{{range .NetworkSettings.Networks}}{{.IPAddress}}{{end}}' petstoreproductservice)
 PETSTORE_ORDER_SERVICE_IP=$(docker inspect -f '{{range .NetworkSettings.Networks}}{{.IPAddress}}{{end}}' petstoreorderservice)
 
 # Run the petstoreapp container with dynamically retrieved IPs
-docker run --rm --net $NETWORK_NAME --name petstoreapp -p 8080:8080 \
+docker run --rm --name petstoreapp -p 8080:8080 \
   -e PETSTOREAPP_SERVER_PORT=8080 \
   -e PETSTOREPETSERVICE_URL=http://$PETSTORE_PET_SERVICE_IP:8081 \
   -e PETSTOREPRODUCTSERVICE_URL=http://$PETSTORE_PRODUCT_SERVICE_IP:8082 \

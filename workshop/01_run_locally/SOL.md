@@ -62,7 +62,7 @@ docker run --rm --name petstoreapp -p 8080:8080 \
 # petstoreapp is now available at localhost:8080
 ```
 
-## Explore the Petshop
+## Explore the Petstore 
 Navigate your browser to `http://localhost:8080` and explore the Pet shop.
 
 ## Configuring a service

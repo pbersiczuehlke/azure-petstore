@@ -2,7 +2,7 @@
 
 This exercise is intended to provide a deeper understanding of containerized applications.
 
-The code for the four services that our Petshop consists of is located at:
+The code for the four services that our Petstore consists of is located at:
 `petstore/petstoreapp`, `petstore/petstorepetservice`, `petstore/petstoreproductservice`, `petstore/petstoreorderservcie`.
 
 Each of those directories contains a Dockerfile that builds that microservice.
@@ -71,4 +71,4 @@ Links:
 
 ## Acceptance Criteria:
 1. Images are built
-2. Petshop is running on your local machine
+2. Petstore is running on your local machine

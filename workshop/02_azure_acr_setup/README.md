@@ -55,7 +55,7 @@ one for everything else.
 - **Steps**:
     1. Log in to the ACR using `az acr login`
     2. Tag local Docker images with the ACR URL
-    3. Push the Petshop images to the ACR
+    3. Push the Petstore images to the ACR
 - **Links**:
     - [Push and pull Docker images](https://learn.microsoft.com/en-us/azure/container-registry/container-registry-get-started-docker-cli)
     - [Authenticate with Azure Container Registry](https://learn.microsoft.com/en-us/azure/container-registry/container-registry-authentication)

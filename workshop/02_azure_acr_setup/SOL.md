@@ -78,16 +78,18 @@ We will use the Azure Portal to create the ACR.
 6. Pricing plan: 'Premium'
 7. Click: 'Next: Networking >'
 8. Select: 'Private access'
-9. Click: 'Create a private endpoint connection'
-10. Name: 'pe-acr' explanation: pe = private endpoint, acr = azure container registry
-11. Virtual Network: provided one
-12. Subnet: 'snet-hackathon-cr-devlab-00<team_number>'
-13. Click: 'OK'
-14. Next, Next
-15. Add a tag. Name team, value <your team name>
-16. Next
-17. Create
- 
+9. Go to Tags
+10. Add a tag. Name team, value <your team name>
+11. Next
+12. Create
+
+To add the private endpoint:
+1. Go to Settings on the left-hand side -> Networking -> Private access
+2. Click: 'Create a private endpoint connection'
+3. Name: 'pe-acr' explanation: pe = private endpoint, acr = azure container registry
+4. Virtual Network: provided one
+5. Subnet: 'snet-hackathon-cr-devlab-00<team_number>'
+
 We have now created a Registry which can be accessed by the Container Apps.
 
 **Note:** Throughout this workshop we will create many Azure resources.

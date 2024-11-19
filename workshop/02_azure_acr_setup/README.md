@@ -45,6 +45,8 @@ one for everything else.
     2. Name it `team<team_number>petstore`
     3. Set the location to 'Sweden Central'
     4. Configure it to the appropriate subnet
+- **Note**:
+    - Please first create the ACR with the Premium tier and assign the endpoint after ACR has been created. 
 - **Links**:
     - [Quickstart: Create a private container registry using the Azure portal](https://learn.microsoft.com/en-us/azure/container-registry/container-registry-get-started-portal)
     - [Use private endpoints for Azure Container Registry](https://learn.microsoft.com/en-us/azure/container-registry/container-registry-private-link)

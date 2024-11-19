@@ -1,4 +1,4 @@
-# Sending Order Email
+# Sending Order Email (Optional)
 When our order is placed, we wish to email the store worker about the order, so that they can start preparing it.
 For this purpose we will use a Logic App.
 Azure Logic Apps is a cloud platform where you can create and run automated workflows with little to no code.
@@ -45,9 +45,8 @@ To create a Service Bus:
 9. Click + Private Endpoint
 10. Choose your resource group
 11. Name `pe-sb`
-12. Choose the provided VNet
-13. Choose the `sn-<teamname>` subnet
-14. Create it
+12. Choose the provided VNet & subnet for the ACR
+13. Create it
 
 Once the Service Bus is created:
 1. Press + Topic
@@ -67,10 +66,8 @@ To access the topic from the Logic App, we need to generate some keys.
 1. Go to the `orders` Topic
 2. Go to Shared access policies
 3. Click + Add
-4. Name it `logicapp`
-5. Give it Listen claim
-
-Create another one in the same way, but call it `orderservice` and give it the Send claim.
+4. Name it `orderservice`
+5. Give it Send claim
 
 ## Logic App
 The job of the Logic App is to take a message from the service bus and use it to send an email.
@@ -78,29 +75,44 @@ The job of the Logic App is to take a message from the service bus and use it to
 To create a logic app:
 1. Navigate to the Azure Portal -> Search Logic Apps
 2. Click +Add
-3. Choose Consumption  TODO: VNet communication?
-4. Name `orderemail`
-5. Region: Switzerland North
-6. Create
+3. Choose Workflow Service Plan
+4. Name `team<team_number>petstorela`
+5. Region: Sweden Central
+6. Go to Networking
+7. Public access: Off
+8. Network injection: On
+9. Provided VNet
+10. Enable Private Endpoint: Yes, assigned to the ACR subnet
+11. Outbound Access: Yes
+12. Choose So-far unused subnet assigned to your group
+13. Disable public access
+14. Private endpoint prefix: `pe-team<team_number>-`
+15. Subnet: ACR subnet
+16. Add Tags
+17. Create
+
+You need to set the environment variable `WEBSITE_CONTENTOVERVNET` to `1` on the logic app that we just created.
 
 To create the most basic Logic App that simply sends 'New Order Received' to your email:
 1. On the left-hand side select Logic app designer
 2. Click 'Add a trigger' in the middle of the screen
-3. Search for Service Bus -> When a message is received in a topic subscription 
-4. You will create a connection using the Keys provided on the service bus `logicapp` Shared Access Policy
-5. Open the `logicapp` Policy and copy the primary connection string
+3. Search for Service Bus -> When messages are available in a topic subscription (peek-lock)
+4. You will create a connection using the `RootManageSharedAccessKey` Key provided in the service bus namespace
+5. Open the service bus namespace and copy the primary connection string
 6. Paste it in the Connection String field on the Logic App
-7. Name the connection `email`
+7. Name the connection `sb-con`
 8. Set Topic name to `orders`
 9. Set Subscription to `email`
 10. Click on the + icon under the service bus
-11. Search for Azure Communication Email -> Send Message
-12. Connection name: my-connection
-13. Copy and paste the primary connection string from the Communication Service above
-14. Set the to email address to your personal corporate email
-15. Subject: New Order 
-16. Body: 'New Order Received'
-17. Click away from the right-hand screen to the middle of the page and click Save in the upper left corner
+11. Add Complete the message in a topic subscription
+12. Topic name: orders, subscription: email, lock token: insert from the trigger block
+13. Search for Azure Communication Email -> Send Message
+14. Connection name: my-connection
+15. Copy and paste the primary connection string from the Communication Service above
+16. Set the to email address to your personal corporate email
+17. Subject: New Order 
+18. Body: 'New Order Received'
+19. Click away from the right-hand screen to the middle of the page and click Save in the upper left corner
 
 To check if the logic app works:
 1. Go to the Service Bus -> Networking and enable Public Access (PROBLEM!)
